@@ -72,6 +72,19 @@ button{background:none;border:0;padding:0;cursor:pointer}
 @keyframes bump{0%{transform:translate(-50%,-50%) scale(1)}42%{transform:translate(-50%,-50%) scale(1.18)}100%{transform:translate(-50%,-50%) scale(1)}}
 
 .bar{display:flex;gap:8px;padding-top:8px}
+.iconbtn{width:42px;height:42px;border-radius:14px;font-size:20px;display:grid;place-items:center;
+  background:rgba(244,239,228,.07);border:1px solid rgba(244,239,228,.1);flex:none;line-height:1}
+.iconbtn:active{background:rgba(244,239,228,.15)}
+.logitem{display:flex;gap:11px;padding:12px 0;border-top:1px solid rgba(244,239,228,.08)}
+.logitem .lk{flex:none;font-size:8.5px;letter-spacing:.14em;font-weight:700;padding:4px 7px;
+  border-radius:6px;height:fit-content;margin-top:2px}
+.lk.round{background:rgba(214,169,60,.16);color:var(--brass)}
+.lk.edit{background:rgba(244,239,228,.1);color:var(--dim)}
+.lk.io{background:rgba(111,179,217,.16);color:#6FB3D9}
+.lk.game{background:rgba(127,214,162,.16);color:var(--good)}
+.logitem p{margin:0;font-size:12.5px;line-height:1.55;white-space:pre-line;color:var(--chalk)}
+.logitem time{font-size:10px;color:var(--dim);letter-spacing:.08em}
+.logwrap{max-height:52dvh;overflow-y:auto;margin-top:4px}
 .bar button{flex:1;padding:15px 6px;border-radius:15px;font-size:13.5px;font-weight:600;letter-spacing:.03em;
   background:rgba(244,239,228,.07);border:1px solid rgba(244,239,228,.1);transition:.15s}
 .bar button:active{transform:scale(.97)}
@@ -226,7 +239,10 @@ button{background:none;border:0;padding:0;cursor:pointer}
 <section id="app" hidden style="flex:1;display:flex;flex-direction:column">
   <header class="top">
     <div class="brand">ΠΡΕΦΑ<small id="dealerLbl">ΜΟΙΡΑΖΕΙ —</small></div>
-    <div class="hand-no">ΓΥΡΟΣ<b id="handNo">1</b></div>
+    <div style="display:flex;align-items:center;gap:10px">
+      <div class="hand-no">ΓΥΡΟΣ<b id="handNo">1</b></div>
+      <button id="menu" class="iconbtn" aria-label="Μενού">⋯</button>
+    </div>
   </header>
   <div class="stage">
     <div class="pista" id="pista">
@@ -238,9 +254,9 @@ button{background:none;border:0;padding:0;cursor:pointer}
         <g filter="url(#chalk)">
           <circle class="ink faint" cx="200" cy="200" r="128"/>
           <circle class="ink draw" cx="200" cy="200" r="128" style="--len:805"/>
-          <line class="ink draw d2" x1="200" y1="200" x2="200" y2="328" style="--len:128"/>
-          <line class="ink draw d3" x1="200" y1="200" x2="89.15" y2="136" style="--len:128"/>
-          <line class="ink draw d4" x1="200" y1="200" x2="310.85" y2="136" style="--len:128"/>
+          <line class="ink draw d2" x1="200" y1="200" x2="200" y2="72" style="--len:128"/>
+          <line class="ink draw d3" x1="200" y1="200" x2="89.15" y2="264" style="--len:128"/>
+          <line class="ink draw d4" x1="200" y1="200" x2="310.85" y2="264" style="--len:128"/>
         </g>
       </svg>
     </div>
@@ -267,6 +283,7 @@ button{background:none;border:0;padding:0;cursor:pointer}
 <div class="backdrop" id="backdrop"></div>
 <div class="sheet" id="sheet" role="dialog" aria-modal="true"></div>
 <div class="toast" id="toast"></div>
+<input type="file" id="fileIn" accept=".json,application/json" style="position:fixed;left:-9999px;width:1px;height:1px;opacity:0">
 
 <script>
 (function(){
@@ -284,11 +301,13 @@ var hist=[];
 var D={};          // τρέχων γύρος
 var page="dec";    // οθόνη οδηγού
 
-var PAIRS=[{a:0,b:2,pa:[32.15,31],pb:[24.65,44]},
-           {a:0,b:1,pa:[67.85,31],pb:[75.35,44]},
-           {a:2,b:1,pa:[42.5,74.95],pb:[57.5,74.95]}];
-var KASAPOS=[[50,31],[65.25,58.5],[34.75,58.5]];
-var NETPOS=[[50,8],[79,69],[21,69]];
+// Ανάποδο Υ: στέλεχος πάνω, δύο βραχίονες κάτω.
+// Τομείς: πάνω-αριστερά (Α), πάνω-δεξιά (Β), κάτω (Γ)
+var PAIRS=[{a:0,b:1,pa:[42.5,25.05],pb:[57.5,25.05]},      // στη γραμμή που ανεβαίνει
+           {a:0,b:2,pa:[24.65,55.98],pb:[32.15,68.98]},    // κάτω-αριστερά
+           {a:1,b:2,pa:[75.35,55.98],pb:[67.85,68.98]}];   // κάτω-δεξιά
+var KASAPOS=[[34.75,41.2],[65.25,41.2],[50,67.6]];
+var NETPOS=[[17,30.6],[83,30.6],[50,90]];
 
 var $=function(s){return document.querySelector(s);};
 function esc(t){return String(t).replace(/[&<>"]/g,function(c){
@@ -403,7 +422,11 @@ function defNeed(){                     // το αθροιστικό χρέος 
   var n=0; defs().forEach(function(p){ var c=charge(p); if(c) n+=c; }); return n;
 }
 function calc(){
-  var V=value(D.lv,D.st),d=defs(),out={kasa:0,tx:[],V:V,dbl:false};
+  var Vnom=value(D.lv,D.st);
+  var totKasa=S.kasa[0]+S.kasa[1]+S.kasa[2];
+  // η αξία δεν μπορεί να ξεπερνά το άθροισμα όλων των κασών (οι μπάζες μένουν ίδιες)
+  var V=Math.min(Vnom,totKasa);
+  var d=defs(),out={kasa:0,tx:[],V:V,Vnom:Vnom,capped:Vnom>V,dbl:false};
   var dp=d.filter(plays);                 // αμυνόμενοι που κατέβηκαν
   var played=[D.dec].concat(dp);          // όσοι έπαιξαν
   function pay(from,amt){                 // ο from πληρώνει όσους έπαιξαν
@@ -448,7 +471,6 @@ function calc(){
           }
         });
       }
-      out.capped=left;                     // αξία μεγαλύτερη από όλες τις κάσες μαζί
       dp.forEach(function(p){              // πληρώνει μόνο αν δεν μπήκε κανείς μέσα
         var a=D.tr[p]*V; if(a>0) out.tx.push({to:p,from:D.dec,amt:a});
       });
@@ -615,10 +637,12 @@ function refreshTr(){
   if(sd){ var ok=D.tr[D.dec]>=D.lv;
     sd.textContent="χρέος "+D.lv+" · "+(ok?"έβγαλε":"μέσα "+(D.lv-D.tr[D.dec]));
     sd.className=ok?"ok":"in"; }
-  var r=calc(),lines='<div class="hl"><span>Αξία '+cname(D.lv,D.st)+'</span><b>'+r.V+(r.dbl?" ×2":"")+'</b></div>';
+  var r=calc(),lines='<div class="hl"><span>Αξία '+cname(D.lv,D.st)+(r.capped?" (από "+r.Vnom+")":"")+
+    '</span><b>'+r.V+(r.dbl?" ×2":"")+'</b></div>';
   if(dp.length) lines+='<div><span>Άμυνα αθροιστικά</span><b class="'+(r.defOk?"pos":"neg")+'">'+
     r.defSum+' / '+r.defNeed+'</b></div>';
-  if(r.capped) lines+='<div><span>Δεν χώρεσε σε κάσα</span><b class="neg">'+r.capped+'</b></div>';
+  if(r.capped) lines+='<div><span>Πλαφόν: σύνολο κασών</span><b class="neg">'+
+    (S.kasa[0]+S.kasa[1]+S.kasa[2])+'</b></div>';
   [0,1,2].forEach(function(p){
     if(!r.kasaD[p]) return;
     lines+='<div><span>Κάσα '+esc(S.names[p])+
@@ -637,11 +661,28 @@ function refreshTr(){
 }
 function commit(){
   snap();
-  var r=calc();
+  var r=calc(), before=S.kasa.slice();
   [0,1,2].forEach(function(p){ S.kasa[p]=Math.max(0,S.kasa[p]+r.kasaD[p]); });
   r.tx.forEach(function(t){S.wist[t.to][t.from]+=t.amt;});
-  S.log.unshift("#"+S.hand+" "+S.names[D.dec]+" "+cname(D.lv,D.st)+" ("+r.V+") · "+
-    (r.made?"έβγαλε":"μέσα")+" · "+playLabel()+" · μπάζες "+D.tr.join("-"));
+
+  var txt="Γύρος "+S.hand+" · "+S.names[D.dec]+" δήλωσε "+cname(D.lv,D.st)+
+    " (αξία "+r.V+(r.capped?" αντί "+r.Vnom+", πλαφόν κασών":"")+(r.dbl?" ×2":"")+")";
+  txt+="\\nΆμυνα: "+playLabel()+" · μπάζες "+
+    [0,1,2].map(function(p){return S.names[p]+" "+D.tr[p];}).join(", ");
+  txt+="\\n"+(r.made?(r.defIn.length?"Έβγαλε, αλλά μπήκε η άμυνα":"Έβγαλε το συμβόλαιο")
+                  :"Μπήκε μέσα κατά "+(D.lv-D.tr[D.dec]));
+  if(r.defIn.length) txt+=" — "+r.defIn.map(function(x){
+    return S.names[x.p]+" μέσα κατά "+x.by;}).join(", ");
+  var ks=[]; [0,1,2].forEach(function(p){
+    if(r.kasaD[p]) ks.push(S.names[p]+" "+before[p]+"→"+S.kasa[p]);});
+  if(ks.length) txt+="\\nΚάσα: "+ks.join(" · ");
+  var net={};
+  r.tx.forEach(function(t){net[t.to+"|"+t.from]=(net[t.to+"|"+t.from]||0)+t.amt;});
+  var ts=Object.keys(net).map(function(k){var a=k.split("|");
+    return S.names[a[1]]+" → "+S.names[a[0]]+" "+net[k];});
+  txt+="\\nΚαπίκια: "+(ts.length?ts.join(" · "):"κανένα");
+  log("round",txt);
+
   S.hand++; S.dealer=(S.dealer+1)%3;
   render(); save(); closeWiz(); toast(r.made?"Το έβγαλε":"Μπήκε μέσα");
 }
@@ -649,13 +690,27 @@ $("#wizBack").onclick=function(){var p=prevPage(page); if(p) go(p);};
 $("#wizX").onclick=closeWiz;
 
 /* ══ διορθώσεις ══ */
+var onClose=null;
+function flushClose(){ if(onClose){ var f=onClose; onClose=null; f(); } }
+function log(kind,text){
+  normLog();
+  S.log.unshift({t:Date.now(),k:kind,s:text});
+  if(S.log.length>250) S.log.pop();
+}
+function normLog(){
+  S.log=(S.log||[]).map(function(e){ return typeof e==="string"?{t:null,k:"round",s:e}:e; });
+}
+function kindLabel(k){
+  return {round:"ΓΥΡΟΣ",edit:"ΧΕΡΙ",io:"ΑΡΧΕΙΟ",game:"ΠΑΙΧΝΙΔΙ"}[k]||"—";
+}
 function openSheet(html){
+  flushClose();
   var s=$("#sheet"); s.replaceWith(s.cloneNode(false)); s=$("#sheet");
   s.innerHTML=html; s.classList.add("on"); $("#backdrop").classList.add("on"); s.scrollTop=0; return s;
 }
 function blur(){ try{document.activeElement&&document.activeElement.blur();
   var sel=window.getSelection&&window.getSelection(); if(sel&&sel.removeAllRanges) sel.removeAllRanges();}catch(e){} }
-function closeSheet(){blur();$("#sheet").classList.remove("on");$("#backdrop").classList.remove("on");}
+function closeSheet(){flushClose();blur();$("#sheet").classList.remove("on");$("#backdrop").classList.remove("on");}
 function editKasa(i){
   snap();
   var s=openSheet('<div class="grip"></div><div class="kick">ΔΙΟΡΘΩΣΗ ΚΑΣΑΣ</div>'+
@@ -666,6 +721,9 @@ function editKasa(i){
     '<button data-d="1">+</button></div></div>'+
     '<p class="snote">Γράψε κατευθείαν τον αριθμό ή χρησιμοποίησε τα +/−. Κανονικά αλλάζει μόνη της στην καταχώρηση του γύρου.</p>'+
     '<button class="done">ΕΤΟΙΜΟ</button>');
+  var before=S.kasa[i];
+  onClose=function(){ if(S.kasa[i]!==before)
+    log("edit","Χειροκίνητη αλλαγή · κάσα "+S.names[i]+": "+before+" → "+S.kasa[i]); save(); };
   function set(v){ S.kasa[i]=Math.max(0,v||0); render(); save(); }
   s.addEventListener("click",function(e){
     var b=e.target.closest("[data-d]");
@@ -690,6 +748,10 @@ function editPair(k){
     '<button data-d="1">+</button></div></div>'+
     '<p class="snote">Αρνητικό νούμερο σημαίνει ότι χρωστάει ο '+esc(S.names[a])+'.</p>'+
     '<button class="done">ΕΤΟΙΜΟ</button>');
+  var before=net();
+  onClose=function(){ if(net()!==before)
+    log("edit","Χειροκίνητη αλλαγή · καπίκια "+S.names[a]+" — "+S.names[b2]+": "+
+      before+" → "+net()); save(); };
   function set(n){
     n=n||0;
     S.wist[a][b2]=Math.max(0,n); S.wist[b2][a]=Math.max(0,-n);
@@ -728,17 +790,11 @@ function openSettle(){
       (S.kapiki>0?'<th>ΕΥΡΩ</th>':'')+'</tr></thead><tbody>'+rows+'</tbody></table>'+
     '<div class="kick">ΞΕΚΑΘΑΡΙΣΜΑ</div>'+pairs+
     '<div class="money"><span>Αξία καπικιού</span><input id="kap" type="number" inputmode="decimal" step="0.01" min="0" value="'+S.kapiki+'"><span>€</span></div>'+
-    (S.log.length?'<div class="kick">ΙΣΤΟΡΙΚΟ</div><div class="log">'+
-      S.log.slice(0,40).map(function(l){return '<div>'+esc(l)+'</div>';}).join("")+'</div>':'')+
-    '<button class="done">ΚΛΕΙΣΙΜΟ</button><button class="ghost" id="newgame">Νέο παιχνίδι</button>');
+    '<button class="done">ΚΛΕΙΣΙΜΟ</button>'+
+    '<button class="ghost" id="tolog">Ιστορικό γύρων</button>');
   s.addEventListener("click",function(e){
     if(e.target.closest(".done")) closeSheet();
-    if(e.target.closest("#newgame")){
-      if(!confirm("Νέο παιχνίδι; Σβήνονται κάσες και καπίκια.")) return;
-      S.kasa=[S.start,S.start,S.start];S.wist=[[0,0,0],[0,0,0],[0,0,0]];
-      S.hand=1;S.dealer=0;S.log=[];hist=[];$("#undo").disabled=true;
-      render();save();closeSheet();toast("Καθαρή πίστα");
-    }
+    if(e.target.closest("#tolog")) openLog();
   });
   $("#kap").addEventListener("change",function(){
     S.kapiki=Math.max(0,parseFloat(this.value)||0);save();openSettle();
@@ -755,9 +811,89 @@ $("#start").addEventListener("click",function(){
   for(var i=0;i<3;i++){var v=$("#n"+i).value.trim(); if(v) S.names[i]=v.toUpperCase();}
   S.start=Math.max(1,parseInt($("#startKasa").value,10)||30);
   S.kasa=[S.start,S.start,S.start];S.started=true;
+  log("game","Νέο παιχνίδι · "+S.names.join(", ")+" · κάσα "+S.start+" έκαστος");
   $("#setup").hidden=true;$("#app").hidden=false;
   buildPista();render();save();
 });
+function newGame(){
+  if(!confirm("Νέο παιχνίδι; Σβήνονται κάσες και καπίκια.")) return;
+  S.kasa=[S.start,S.start,S.start];S.wist=[[0,0,0],[0,0,0],[0,0,0]];
+  S.hand=1;S.dealer=0;S.log=[];hist=[];$("#undo").disabled=true;
+  log("game","Νέο παιχνίδι · κάσα "+S.start+" έκαστος");
+  render();save();closeSheet();toast("Καθαρή πίστα");
+}
+
+/* ══ μενού · αρχεία · ιστορικό ══ */
+function openMenu(){
+  var s=openSheet('<div class="grip"></div><h2 class="stitle">Παιχνίδι</h2>'+
+    '<div style="display:flex;flex-direction:column;gap:9px;margin-top:16px">'+
+    opt("Ιστορικό","όλοι οι γύροι και οι διορθώσεις","",'data-a="log"')+
+    opt("Αποθήκευση σε αρχείο","κατεβάζει την παρτίδα σε JSON","",'data-a="save"')+
+    opt("Φόρτωση από αρχείο","συνεχίζεις μια ημιτελή παρτίδα","",'data-a="load"')+
+    opt("Νέο παιχνίδι","σβήνει κάσες και καπίκια","",'data-a="new"')+
+    '</div><button class="done">ΚΛΕΙΣΙΜΟ</button>');
+  s.addEventListener("click",function(e){
+    var b=e.target.closest("[data-a]");
+    if(e.target.closest(".done")) return closeSheet();
+    if(!b) return;
+    var a=b.dataset.a;
+    if(a==="log") openLog();
+    else if(a==="save") saveFile();
+    else if(a==="load") $("#fileIn").click();
+    else if(a==="new") newGame();
+  });
+}
+function openLog(){
+  normLog();
+  var items=S.log.length ? S.log.map(function(e){
+    var tm=e.t?new Date(e.t).toLocaleString("el-GR",
+      {day:"2-digit",month:"2-digit",hour:"2-digit",minute:"2-digit"}):"";
+    return '<div class="logitem"><span class="lk '+e.k+'">'+kindLabel(e.k)+'</span>'+
+      '<div><p>'+esc(e.s)+'</p>'+(tm?'<time>'+tm+'</time>':'')+'</div></div>';
+  }).join("") : '<p class="snote">Δεν έχει καταγραφεί τίποτα ακόμα.</p>';
+  var s=openSheet('<div class="grip"></div><h2 class="stitle">Ιστορικό</h2>'+
+    '<p class="snote">'+S.log.length+' καταχωρήσεις · νεότερες πρώτα</p>'+
+    '<div class="logwrap">'+items+'</div>'+
+    '<button class="done">ΚΛΕΙΣΙΜΟ</button>');
+  s.addEventListener("click",function(e){ if(e.target.closest(".done")) closeSheet(); });
+}
+function saveFile(){
+  try{
+    var data={app:"prefa-pista",v:3,saved:new Date().toISOString(),state:S};
+    var blob=new Blob([JSON.stringify(data,null,2)],{type:"application/json"});
+    var url=URL.createObjectURL(blob), a=document.createElement("a");
+    var d=new Date(), pad=function(n){return (n<10?"0":"")+n;};
+    a.href=url;
+    a.download="prefa-"+d.getFullYear()+pad(d.getMonth()+1)+pad(d.getDate())+
+      "-"+pad(d.getHours())+pad(d.getMinutes())+".json";
+    document.body.appendChild(a); a.click();
+    setTimeout(function(){URL.revokeObjectURL(url); a.remove();},1500);
+    toast("Η παρτίδα κατέβηκε");
+  }catch(err){ toast("Δεν έγινε η αποθήκευση"); }
+}
+$("#fileIn").addEventListener("change",function(){
+  var f=this.files&&this.files[0]; var self=this;
+  if(!f) return;
+  var rd=new FileReader();
+  rd.onload=function(){
+    try{
+      var d=JSON.parse(rd.result), st=(d&&d.state)?d.state:d;
+      if(!st||!st.kasa||!st.names||!st.wist) throw new Error("bad");
+      snap();
+      Object.keys(st).forEach(function(k){ S[k]=st[k]; });
+      normLog();
+      S.started=true;
+      log("io","Φορτώθηκε παρτίδα από αρχείο: "+f.name+
+        " · γύρος "+S.hand+" · κάσες "+S.kasa.join("/"));
+      $("#setup").hidden=true; $("#app").hidden=false;
+      buildPista(); render(); save(); closeSheet(); toast("Η παρτίδα φορτώθηκε");
+    }catch(err){ toast("Το αρχείο δεν διαβάστηκε"); }
+    self.value="";
+  };
+  rd.onerror=function(){ toast("Το αρχείο δεν διαβάστηκε"); self.value=""; };
+  rd.readAsText(f);
+});
+$("#menu").addEventListener("click",openMenu);
 $("#round").addEventListener("click",openWiz);
 $("#settle").addEventListener("click",openSettle);
 $("#undo").addEventListener("click",function(){
@@ -769,6 +905,7 @@ $("#undo").addEventListener("click",function(){
 load().then(function(sv){
   if(sv&&sv.started){
     Object.keys(sv).forEach(function(k){S[k]=sv[k];});
+    normLog();
     $("#setup").hidden=true;$("#app").hidden=false;buildPista();render();
   }
 });
