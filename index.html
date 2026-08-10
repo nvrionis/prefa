@@ -5,6 +5,14 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#123528">
 <title>Πρέφα</title>
+<link rel="manifest" href="./manifest.webmanifest">
+<link rel="icon" href="./favicon.png" sizes="64x64" type="image/png">
+<link rel="apple-touch-icon" href="./apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Πρέφα">
+<meta name="description" content="Πίστα για πρέφα τριών παικτών: κάσα, καπίκια και αυτόματος υπολογισμός του γύρου.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Commissioner:wght@300;400;600;800&family=GFS+Neohellenic:wght@400;700&display=swap" rel="stylesheet">
@@ -39,7 +47,7 @@ button{background:none;border:0;padding:0;cursor:pointer}
 .hand-no b{display:block;font-family:var(--greek);font-size:22px;letter-spacing:.06em;color:var(--chalk)}
 
 .stage{flex:1;display:flex;align-items:center;justify-content:center;padding:4px 0;min-width:0}
-.pista{position:relative;width:min(100%,66vh);aspect-ratio:1;container-type:inline-size;
+.pista{position:relative;width:min(100%,72vh);aspect-ratio:1;container-type:inline-size;
   max-width:100%}
 .pista svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
 .ink{fill:none;stroke:var(--line);stroke-width:2.2;stroke-linecap:round}
@@ -50,20 +58,19 @@ button{background:none;border:0;padding:0;cursor:pointer}
   @keyframes draw{to{stroke-dashoffset:0}}
 }
 .cell{position:absolute;transform:translate(-50%,-50%);display:flex;flex-direction:column;
-  align-items:center;gap:2px;padding:6px 9px;border-radius:14px;white-space:nowrap;transition:.15s}
+  align-items:center;gap:2px;padding:6px 7px;border-radius:14px;white-space:nowrap;transition:.15s}
 .cell:active{transform:translate(-50%,-50%) scale(.94)}
 @media (hover:hover){.cell:hover{background:rgba(244,239,228,.06)}}
-.cell .nm{font-family:var(--greek);font-weight:700;font-size:3.9cqi;letter-spacing:.13em;line-height:1;
-  max-width:30cqi;overflow:hidden;text-overflow:ellipsis}
-.cell .kasa{font-size:11cqi;font-weight:800;line-height:.86;font-variant-numeric:tabular-nums;letter-spacing:-.03em}
+.cell .nm{font-family:var(--greek);font-weight:700;font-size:4.1cqi;letter-spacing:.12em;line-height:1;
+  max-width:29cqi;overflow:hidden;text-overflow:ellipsis}
+.cell .kasa{font-size:12.5cqi;font-weight:800;line-height:.86;font-variant-numeric:tabular-nums;letter-spacing:-.03em}
 .cell .tag{font-size:2.6cqi;letter-spacing:.2em;color:var(--dim);font-weight:600}
 .cell.dealer .nm::before{content:"◆ ";color:var(--brass);font-size:.75em;vertical-align:.1em}
-.net{position:absolute;transform:translate(-50%,-50%);display:flex;flex-direction:column;align-items:center;
-  gap:1px;padding:6px 11px;border-radius:999px;border:1px solid rgba(244,239,228,.16);background:rgba(0,0,0,.22)}
-.net .v{font-size:4.6cqi;font-weight:800;font-variant-numeric:tabular-nums;line-height:1}
-.net .l{font-size:2.3cqi;letter-spacing:.2em;color:var(--dim);font-weight:600}
-.net.nil .v{color:rgba(244,239,228,.35)}
-.kap{position:absolute;transform:translate(-50%,-50%);font-size:5.4cqi;font-weight:800;
+.net{position:absolute;transform:translate(-50%,-50%);padding:6px 11px;border-radius:999px;
+  border:1px solid rgba(244,239,228,.14);background:rgba(0,0,0,.26);
+  font-size:5cqi;font-weight:800;font-variant-numeric:tabular-nums;line-height:1;white-space:nowrap}
+.net.nil{opacity:.42}
+.kap{position:absolute;transform:translate(-50%,-50%);font-size:5.6cqi;font-weight:800;
   font-variant-numeric:tabular-nums;padding:5px 10px;border-radius:999px;
   background:rgba(0,0,0,.3);border:1px solid rgba(244,239,228,.14);
   transition:left .35s cubic-bezier(.32,.72,0,1),top .35s cubic-bezier(.32,.72,0,1),color .2s,opacity .2s}
@@ -215,6 +222,13 @@ button{background:none;border:0;padding:0;cursor:pointer}
   background:#0A1F17;border:1px solid rgba(244,239,228,.16);padding:11px 20px;border-radius:999px;
   font-size:13px;font-weight:600;opacity:0;transition:.25s;pointer-events:none;z-index:40}
 .toast.on{opacity:1;transform:translate(-50%,0)}
+.update{position:fixed;left:14px;right:14px;bottom:calc(14px + env(safe-area-inset-bottom));
+  max-width:612px;margin:0 auto;z-index:45;display:flex;align-items:center;gap:12px;
+  background:#0A1F17;border:1px solid rgba(214,169,60,.4);border-radius:16px;padding:12px 12px 12px 16px;
+  box-shadow:0 12px 40px rgba(0,0,0,.5)}
+.update span{flex:1;font-size:13px;font-weight:600}
+.update button{background:var(--brass);color:#20180A;font-weight:800;font-size:12px;
+  letter-spacing:.06em;padding:11px 16px;border-radius:11px}
 .banner{background:rgba(127,214,162,.12);border:1px solid rgba(127,214,162,.3);border-radius:14px;
   padding:12px 14px;font-size:13px;color:var(--good);margin-bottom:10px;text-align:center;font-weight:600}
 </style>
@@ -252,11 +266,11 @@ button{background:none;border:0;padding:0;cursor:pointer}
           <feDisplacementMap in="SourceGraphic" in2="n" scale="3.4" xChannelSelector="R" yChannelSelector="G"/>
         </filter></defs>
         <g filter="url(#chalk)">
-          <circle class="ink faint" cx="200" cy="200" r="128"/>
-          <circle class="ink draw" cx="200" cy="200" r="128" style="--len:805"/>
-          <line class="ink draw d2" x1="200" y1="200" x2="200" y2="72" style="--len:128"/>
-          <line class="ink draw d3" x1="200" y1="200" x2="89.15" y2="264" style="--len:128"/>
-          <line class="ink draw d4" x1="200" y1="200" x2="310.85" y2="264" style="--len:128"/>
+          <circle class="ink faint" cx="200" cy="200" r="148"/>
+          <circle class="ink draw" cx="200" cy="200" r="148" style="--len:930"/>
+          <line class="ink draw d2" x1="200" y1="200" x2="200" y2="52" style="--len:148"/>
+          <line class="ink draw d3" x1="200" y1="200" x2="71.8" y2="274" style="--len:148"/>
+          <line class="ink draw d4" x1="200" y1="200" x2="328.2" y2="274" style="--len:148"/>
         </g>
       </svg>
     </div>
@@ -283,6 +297,10 @@ button{background:none;border:0;padding:0;cursor:pointer}
 <div class="backdrop" id="backdrop"></div>
 <div class="sheet" id="sheet" role="dialog" aria-modal="true"></div>
 <div class="toast" id="toast"></div>
+<div class="update" id="update" hidden>
+  <span>Υπάρχει νέα έκδοση</span>
+  <button id="doUpdate">ΑΝΑΝΕΩΣΗ</button>
+</div>
 <input type="file" id="fileIn" accept=".json,application/json" style="position:fixed;left:-9999px;width:1px;height:1px;opacity:0">
 
 <script>
@@ -296,18 +314,18 @@ var LEVELS=[6,7,8,9,10];
 
 var S={names:["ΠΑΙΚΤΗΣ Α","ΠΑΙΚΤΗΣ Β","ΠΑΙΚΤΗΣ Γ"],colors:[0,1,2],
   kasa:[30,30,30],start:30,wist:[[0,0,0],[0,0,0],[0,0,0]],
-  dealer:0,hand:1,kapiki:0,log:[],started:false};
+  dealer:0,hand:1,kapiki:0,log:[],wake:false,started:false};
 var hist=[];
 var D={};          // τρέχων γύρος
 var page="dec";    // οθόνη οδηγού
 
 // Ανάποδο Υ: στέλεχος πάνω, δύο βραχίονες κάτω.
 // Τομείς: πάνω-αριστερά (Α), πάνω-δεξιά (Β), κάτω (Γ)
-var PAIRS=[{a:0,b:1,pa:[42.5,25.05],pb:[57.5,25.05]},      // στη γραμμή που ανεβαίνει
-           {a:0,b:2,pa:[24.65,55.98],pb:[32.15,68.98]},    // κάτω-αριστερά
-           {a:1,b:2,pa:[75.35,55.98],pb:[67.85,68.98]}];   // κάτω-δεξιά
-var KASAPOS=[[34.75,41.2],[65.25,41.2],[50,67.6]];
-var NETPOS=[[17,30.6],[83,30.6],[50,90]];
+var PAIRS=[{a:0,b:1,pa:[44,17.5],pb:[56,17.5]},            // στη γραμμή που ανεβαίνει
+           {a:0,b:2,pa:[18.85,61.05],pb:[24.85,71.45]},    // κάτω-αριστερά
+           {a:1,b:2,pa:[81.15,61.05],pb:[75.15,71.45]}];   // κάτω-δεξιά
+var KASAPOS=[[30.75,38.9],[69.25,38.9],[50,69.25]];
+var NETPOS=[[12,12],[88,12],[50,95]];
 
 var $=function(s){return document.querySelector(s);};
 function esc(t){return String(t).replace(/[&<>"]/g,function(c){
@@ -315,10 +333,20 @@ function esc(t){return String(t).replace(/[&<>"]/g,function(c){
 function col(i){return COLORS[S.colors[i]];}
 function value(lv,st){ return lv===6 ? [2,3,4,5,6][st] : (st===4?lv+1:lv); }
 function cname(lv,st){ return lv+(st===4?" ΧΑ":SUITS[st].s); }
-function save(){try{window.storage&&window.storage.set(KEY,JSON.stringify(S));}catch(e){}}
-function load(){ if(!window.storage) return Promise.resolve(null);
+function save(){
+  var txt;
+  try{ txt=JSON.stringify(S); }catch(e){ return; }
+  try{ if(window.storage) window.storage.set(KEY,txt); }catch(e){}
+  try{ if(window.localStorage) localStorage.setItem(KEY,txt); }catch(e){}
+}
+function load(){
+  var local=null;
+  try{ local=window.localStorage?localStorage.getItem(KEY):null; }catch(e){}
+  if(local){ try{ return Promise.resolve(JSON.parse(local)); }catch(e){} }
+  if(!window.storage) return Promise.resolve(null);
   return window.storage.get(KEY).then(function(r){return r&&r.value?JSON.parse(r.value):null;})
-    .catch(function(){return null;});}
+    .catch(function(){return null;});
+}
 function snap(){hist.push(JSON.stringify({kasa:S.kasa,wist:S.wist,dealer:S.dealer,hand:S.hand,log:S.log}));
   if(hist.length>40)hist.shift(); $("#undo").disabled=false;}
 function toast(m){var t=$("#toast");t.textContent=m;t.classList.add("on");
@@ -353,7 +381,7 @@ function buildPista(){
   NETPOS.forEach(function(pos,i){
     var d=document.createElement("div");
     d.className="net";d.dataset.i=i;d.style.left=pos[0]+"%";d.style.top=pos[1]+"%";
-    d.innerHTML='<span class="v"></span><span class="l">ΚΑΠΙΚΙΑ</span>';
+    d.title="σύνολο καπικιών";
     p.appendChild(d);
   });
   PAIRS.forEach(function(pr,k){
@@ -377,10 +405,10 @@ function render(){
     if(old&&old!==String(S.kasa[i])){el.classList.remove("bump");void el.offsetWidth;el.classList.add("bump");}
   });
   Array.prototype.forEach.call(document.querySelectorAll(".net"),function(el){
-    var i=+el.dataset.i,v=netOf(i),s=el.querySelector(".v");
-    s.textContent=(v>0?"+":"")+v;
+    var i=+el.dataset.i,v=netOf(i);
+    el.textContent=(v>0?"+":"")+v;
     el.classList.toggle("nil",v===0);
-    s.style.color = v>0?col(i) : v<0?"var(--wine)" : "";
+    el.style.color=col(i);
   });
   Array.prototype.forEach.call(document.querySelectorAll(".kap"),function(el){
     var pr=PAIRS[+el.dataset.p],net=S.wist[pr.a][pr.b]-S.wist[pr.b][pr.a],old=el.textContent;
@@ -827,6 +855,9 @@ function newGame(){
 function openMenu(){
   var s=openSheet('<div class="grip"></div><h2 class="stitle">Παιχνίδι</h2>'+
     '<div style="display:flex;flex-direction:column;gap:9px;margin-top:16px">'+
+    (deferredPrompt?opt("Εγκατάσταση στην αρχική οθόνη","ανοίγει σαν κανονική εφαρμογή","",'data-a="install"'):"")+
+    opt("Οθόνη πάντα αναμμένη",S.wake?"ενεργό — δεν κλειδώνει στο τραπέζι":"ανενεργό",
+        '<span class="v">'+(S.wake?"ΝΑΙ":"ΟΧΙ")+'</span>','data-a="wake"')+
     opt("Ιστορικό","όλοι οι γύροι και οι διορθώσεις","",'data-a="log"')+
     opt("Αποθήκευση σε αρχείο","κατεβάζει την παρτίδα σε JSON","",'data-a="save"')+
     opt("Φόρτωση από αρχείο","συνεχίζεις μια ημιτελή παρτίδα","",'data-a="load"')+
@@ -837,7 +868,10 @@ function openMenu(){
     if(e.target.closest(".done")) return closeSheet();
     if(!b) return;
     var a=b.dataset.a;
-    if(a==="log") openLog();
+    if(a==="install"){ installApp(); }
+    else if(a==="wake"){ S.wake=!S.wake; save(); applyWake(); openMenu();
+      toast(S.wake?"Η οθόνη θα μένει αναμμένη":"Η οθόνη κλειδώνει κανονικά"); }
+    else if(a==="log") openLog();
     else if(a==="save") saveFile();
     else if(a==="load") $("#fileIn").click();
     else if(a==="new") newGame();
@@ -902,12 +936,68 @@ $("#undo").addEventListener("click",function(){
   if(!hist.length) this.disabled=true;
   render();save();toast("Αναιρέθηκε");
 });
+/* ══ εγκατάσταση, ενημερώσεις, οθόνη ══ */
+var deferredPrompt=null;
+window.addEventListener("beforeinstallprompt",function(e){
+  e.preventDefault(); deferredPrompt=e;
+});
+function installApp(){
+  if(!deferredPrompt){ toast("Χρησιμοποίησε το μενού του browser"); return; }
+  var p=deferredPrompt; deferredPrompt=null;
+  closeSheet(); p.prompt();
+  p.userChoice.then(function(c){
+    if(c&&c.outcome==="accepted") toast("Εγκαταστάθηκε");
+  }).catch(function(){});
+}
+window.addEventListener("appinstalled",function(){ deferredPrompt=null; toast("Εγκαταστάθηκε"); });
+
+var wakeLock=null;
+function applyWake(){
+  try{
+    if(S.wake && navigator.wakeLock && document.visibilityState==="visible"){
+      if(!wakeLock) navigator.wakeLock.request("screen").then(function(l){
+        wakeLock=l; l.addEventListener("release",function(){wakeLock=null;});
+      }).catch(function(){});
+    }else if(wakeLock){ wakeLock.release().catch(function(){}); wakeLock=null; }
+  }catch(e){}
+}
+document.addEventListener("visibilitychange",applyWake);
+
+if("serviceWorker" in navigator){
+  window.addEventListener("load",function(){
+    navigator.serviceWorker.register("./sw.js").then(function(reg){
+      function watch(w){
+        if(!w) return;
+        w.addEventListener("statechange",function(){
+          if(w.state==="installed" && navigator.serviceWorker.controller) showUpdate(w);
+        });
+      }
+      if(reg.waiting && navigator.serviceWorker.controller) showUpdate(reg.waiting);
+      watch(reg.installing);
+      reg.addEventListener("updatefound",function(){ watch(reg.installing); });
+      setInterval(function(){ reg.update().catch(function(){}); }, 60*60*1000);
+    }).catch(function(){});
+    var reloading=false;
+    navigator.serviceWorker.addEventListener("controllerchange",function(){
+      if(reloading) return; reloading=true; location.reload();
+    });
+  });
+}
+function showUpdate(worker){
+  var bar=$("#update"); bar.hidden=false;
+  $("#doUpdate").onclick=function(){
+    bar.hidden=true;
+    try{ worker.postMessage("SKIP_WAITING"); }catch(e){ location.reload(); }
+  };
+}
+
 load().then(function(sv){
   if(sv&&sv.started){
     Object.keys(sv).forEach(function(k){S[k]=sv[k];});
     normLog();
     $("#setup").hidden=true;$("#app").hidden=false;buildPista();render();
   }
+  applyWake();
 });
 })();
 </script>
