@@ -1,7 +1,7 @@
 /* Πρέφα — service worker
    ΑΛΛΑΞΕ ΤΟ VERSION σε κάθε ανέβασμα νέας έκδοσης. Αυτό και μόνο αρκεί:
    το παλιό cache σβήνεται και οι παίκτες παίρνουν ειδοποίηση για ανανέωση. */
-const VERSION = "v1";
+const VERSION = "v2";
 const CORE = "prefa-core-" + VERSION;
 const FONTS = "prefa-fonts-" + VERSION;
 

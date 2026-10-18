@@ -41,8 +41,10 @@ button{background:none;border:0;padding:0;cursor:pointer}
 
 .top{display:flex;align-items:flex-end;justify-content:space-between;gap:12px}
 .brand{font-family:var(--greek);font-weight:700;font-size:19px;letter-spacing:.22em;line-height:1;opacity:.92}
+.brand{min-width:0}
 .brand small{display:block;font-family:var(--sans);font-weight:600;font-size:9.5px;
-  letter-spacing:.24em;color:var(--dim);margin-top:6px}
+  letter-spacing:.24em;color:var(--dim);margin-top:6px;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:62vw}
 .hand-no{font-size:9.5px;letter-spacing:.24em;color:var(--dim);text-align:right;line-height:1.6}
 .hand-no b{display:block;font-family:var(--greek);font-size:22px;letter-spacing:.06em;color:var(--chalk)}
 
@@ -61,18 +63,19 @@ button{background:none;border:0;padding:0;cursor:pointer}
   align-items:center;gap:2px;padding:6px 7px;border-radius:14px;white-space:nowrap;transition:.15s}
 .cell:active{transform:translate(-50%,-50%) scale(.94)}
 @media (hover:hover){.cell:hover{background:rgba(244,239,228,.06)}}
-.cell .nm{font-family:var(--greek);font-weight:700;font-size:4.1cqi;letter-spacing:.12em;line-height:1;
-  max-width:29cqi;overflow:hidden;text-overflow:ellipsis}
+.cell .nm{font-family:var(--greek);font-weight:700;font-size:4.4cqi;letter-spacing:.1em;line-height:1.1;
+  max-width:27cqi;overflow:hidden;text-overflow:ellipsis}
+.cell[data-i="2"] .nm{max-width:36cqi}
 .cell .kasa{font-size:12.5cqi;font-weight:800;line-height:.86;font-variant-numeric:tabular-nums;letter-spacing:-.03em}
 .cell .tag{font-size:2.6cqi;letter-spacing:.2em;color:var(--dim);font-weight:600}
-.cell.dealer .nm::before{content:"◆ ";color:var(--brass);font-size:.75em;vertical-align:.1em}
+.cell.dealer .tag{color:var(--brass)}
 .net{position:absolute;transform:translate(-50%,-50%);padding:6px 11px;border-radius:999px;
   border:1px solid rgba(244,239,228,.14);background:rgba(0,0,0,.26);
   font-size:5cqi;font-weight:800;font-variant-numeric:tabular-nums;line-height:1;white-space:nowrap}
 .net.nil{opacity:.42}
 .kap{position:absolute;transform:translate(-50%,-50%);font-size:5.6cqi;font-weight:800;
   font-variant-numeric:tabular-nums;padding:5px 10px;border-radius:999px;
-  background:rgba(0,0,0,.3);border:1px solid rgba(244,239,228,.14);
+  background:#0E2B21;border:1px solid rgba(244,239,228,.14);
   transition:left .35s cubic-bezier(.32,.72,0,1),top .35s cubic-bezier(.32,.72,0,1),color .2s,opacity .2s}
 .kap.zero{opacity:.4;color:rgba(244,239,228,.45)}
 .bump{animation:bump .3s ease}
@@ -103,13 +106,28 @@ button{background:none;border:0;padding:0;cursor:pointer}
 .setup h1{font-family:var(--greek);font-weight:700;font-size:40px;letter-spacing:.06em;margin:0;line-height:1}
 .kicker{font-size:10px;letter-spacing:.3em;color:var(--dim);margin-bottom:12px}
 .setup p{color:var(--dim);font-size:14px;line-height:1.6;margin:12px 0 0;max-width:36ch}
-.prow{display:flex;align-items:center;gap:10px;border-bottom:1px solid rgba(244,239,228,.14);padding:9px 2px}
-.prow input{flex:1;background:none;border:0;font-size:19px;font-family:var(--greek);font-weight:700;
-  letter-spacing:.1em;padding:4px 0;min-width:0}
-.prow input:focus{outline:none}
-.swatches{display:flex;gap:5px;flex:none}
-.sw{width:22px;height:22px;border-radius:50%;border:2px solid transparent;transition:.15s}
+.pcards{display:flex;flex-direction:column;gap:8px}
+.pcard{background:rgba(0,0,0,.18);border:1px solid rgba(244,239,228,.08);border-left:3px solid var(--pc);
+  border-radius:14px;padding:6px 12px 11px}
+.pc-row{display:flex;align-items:center;gap:8px}
+.pname{flex:1;min-width:0;background:none;border:0;border-bottom:1px solid rgba(244,239,228,.14);
+  font-size:19px;font-family:var(--greek);font-weight:700;letter-spacing:.08em;padding:8px 0 6px;
+  color:var(--pc) !important;text-transform:uppercase;border-radius:0}
+.pname::placeholder{color:rgba(244,239,228,.28)}
+.pname:focus{outline:none;border-bottom-color:var(--pc)}
+.pname.dup{border-bottom-color:var(--wine)}
+.deal{flex:none;min-width:40px;height:34px;padding:0 11px;border-radius:999px;font-size:10px;font-weight:700;
+  letter-spacing:.16em;color:var(--dim);border:1px solid rgba(244,239,228,.12)}
+.deal[aria-pressed="true"]{background:rgba(214,169,60,.16);border-color:rgba(214,169,60,.5);color:var(--brass)}
+.swatches{display:flex;gap:8px;margin-top:10px}
+.sw{width:26px;height:26px;border-radius:50%;border:2px solid transparent;transition:.15s}
 .sw[aria-pressed="true"]{border-color:var(--chalk);transform:scale(1.12)}
+.recent{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px}
+.recent:empty{display:none}
+.recent .rk{width:100%;font-size:9.5px;letter-spacing:.24em;color:var(--dim);margin-bottom:2px}
+.chip{padding:8px 13px;border-radius:999px;background:rgba(244,239,228,.07);border:1px solid rgba(244,239,228,.12);
+  font-family:var(--greek);font-weight:700;font-size:14px;letter-spacing:.08em}
+.chip:active{background:rgba(244,239,228,.16)}
 .numrow{display:flex;align-items:center;gap:12px}
 .numrow input{width:96px;background:rgba(0,0,0,.24);border:1px solid rgba(244,239,228,.12);
   border-radius:12px;padding:12px 14px;font-size:19px;font-weight:800;text-align:center}
@@ -117,6 +135,7 @@ button{background:none;border:0;padding:0;cursor:pointer}
 .numrow span{font-size:11px;letter-spacing:.2em;color:var(--dim)}
 .go{width:100%;padding:17px;border-radius:16px;background:var(--brass);color:#20180A;
   font-weight:800;font-size:15px;letter-spacing:.08em}
+.setup .ghost{margin-top:-12px}
 
 /* ══ wizard (full screen) ══ */
 .wiz{position:fixed;inset:0;z-index:30;display:flex;flex-direction:column;
@@ -240,14 +259,15 @@ button{background:none;border:0;padding:0;cursor:pointer}
   <div>
     <div class="kicker">ΠΙΣΤΑ ΓΙΑ ΤΡΕΙΣ</div>
     <h1>Πρέφα</h1>
-    <p>Ονόματα και χρώματα. Η κάσα κατεβαίνει· τελειώνει όταν μηδενίσουν και οι τρεις.</p>
+    <p>Γράψε ή διάλεξε ονόματα, χρώματα και ποιος μοιράζει πρώτος (◆). Η κάσα κατεβαίνει· τελειώνει όταν μηδενίσουν και οι τρεις.</p>
   </div>
   <div id="setupPlayers"></div>
   <div class="numrow">
-    <input id="startKasa" type="number" inputmode="numeric" value="30" min="1" max="200">
+    <input id="startKasa" type="number" inputmode="numeric" value="30" min="1" max="999">
     <span>ΚΑΣΑ ΕΚΑΣΤΟΣ</span>
   </div>
   <button class="go" id="start">ΣΤΡΩΣΕ ΤΗΝ ΠΙΣΤΑ</button>
+  <button class="ghost" id="setupCancel" hidden>Πίσω στην τρέχουσα παρτίδα</button>
 </section>
 
 <section id="app" hidden style="flex:1;display:flex;flex-direction:column">
@@ -312,7 +332,9 @@ var SUITS=[{s:"♠",n:"ΜΠΑΣΤΟΥΝΙΑ",red:0},{s:"♣",n:"ΣΠΑΘΙΑ",re
            {s:"♦",n:"ΚΑΡΑ",red:1},{s:"♥",n:"ΚΟΥΠΕΣ",red:1},{s:"ΧΑ",n:"ΧΩΡΙΣ ΑΤΟΥ",red:0}];
 var LEVELS=[6,7,8,9,10];
 
-var S={names:["ΠΑΙΚΤΗΣ Α","ΠΑΙΚΤΗΣ Β","ΠΑΙΚΤΗΣ Γ"],colors:[0,1,2],
+var DEFNAMES=["ΠΑΙΚΤΗΣ Α","ΠΑΙΚΤΗΣ Β","ΠΑΙΚΤΗΣ Γ"];
+var NKEY="prefa-names";   // πρόσφατα ονόματα, για γρήγορη επιλογή
+var S={names:DEFNAMES.slice(),colors:[0,1,2],
   kasa:[30,30,30],start:30,wist:[[0,0,0],[0,0,0],[0,0,0]],
   dealer:0,hand:1,kapiki:0,log:[],wake:false,started:false};
 var hist=[];
@@ -324,7 +346,7 @@ var page="dec";    // οθόνη οδηγού
 var PAIRS=[{a:0,b:1,pa:[44,17.5],pb:[56,17.5]},            // στη γραμμή που ανεβαίνει
            {a:0,b:2,pa:[18.85,61.05],pb:[24.85,71.45]},    // κάτω-αριστερά
            {a:1,b:2,pa:[81.15,61.05],pb:[75.15,71.45]}];   // κάτω-δεξιά
-var KASAPOS=[[30.75,38.9],[69.25,38.9],[50,69.25]];
+var KASAPOS=[[33,40],[67,40],[50,70]];
 var NETPOS=[[12,12],[88,12],[50,95]];
 
 var $=function(s){return document.querySelector(s);};
@@ -347,25 +369,103 @@ function load(){
   return window.storage.get(KEY).then(function(r){return r&&r.value?JSON.parse(r.value):null;})
     .catch(function(){return null;});
 }
-function snap(){hist.push(JSON.stringify({kasa:S.kasa,wist:S.wist,dealer:S.dealer,hand:S.hand,log:S.log}));
+function snapStr(){return JSON.stringify({kasa:S.kasa,wist:S.wist,dealer:S.dealer,hand:S.hand,log:S.log,
+  names:S.names,colors:S.colors});}
+function snap(pre){hist.push(pre||snapStr());
   if(hist.length>40)hist.shift(); $("#undo").disabled=false;}
 function toast(m){var t=$("#toast");t.textContent=m;t.classList.add("on");
   clearTimeout(t._h);t._h=setTimeout(function(){t.classList.remove("on");},1800);}
 
-/* ══ setup ══ */
-$("#setupPlayers").innerHTML=S.names.map(function(n,i){
-  return '<div class="prow"><input id="n'+i+'" placeholder="όνομα '+(i+1)+'" maxlength="12" autocomplete="off">'+
-    '<div class="swatches" data-p="'+i+'">'+COLORS.map(function(c,ci){
-      return '<button class="sw" data-c="'+ci+'" style="background:'+c+'" aria-pressed="'+(S.colors[i]===ci)+'" aria-label="χρώμα"></button>';
-    }).join("")+'</div></div>';
-}).join("");
-$("#setupPlayers").addEventListener("click",function(e){
-  var b=e.target.closest(".sw"); if(!b) return;
-  var p=+b.parentNode.dataset.p,c=+b.dataset.c;
-  if(S.colors.indexOf(c)>-1&&S.colors[p]!==c) return;
-  S.colors[p]=c;
-  Array.prototype.forEach.call(b.parentNode.children,function(x){x.setAttribute("aria-pressed",String(x===b));});
-});
+/* ══ ονόματα ══ */
+// κεφαλαία χωρίς τόνους (τα διαλυτικά μένουν), όπως γράφονται στην πίστα
+function normName(v){
+  v=String(v||"").replace(/\s+/g," ").trim().toLocaleUpperCase("el-GR");
+  try{ v=v.normalize("NFD").replace(/[̀́̓̔͂ͅ]/g,"").normalize("NFC"); }catch(e){}
+  return v.slice(0,12);
+}
+function formNames(f){ return f.names.map(function(n,i){ return normName(n)||DEFNAMES[i]; }); }
+function hasDup(n){ return n[0]===n[1]||n[0]===n[2]||n[1]===n[2]; }
+function recentNames(){
+  try{ var r=JSON.parse(localStorage.getItem(NKEY)||"[]");
+    return Array.isArray(r)?r.filter(function(x){return typeof x==="string"&&x;}):[]; }catch(e){ return []; }
+}
+function rememberNames(names){
+  var r=recentNames();
+  names.slice().reverse().forEach(function(n){
+    if(DEFNAMES.indexOf(n)>-1) return;
+    r=r.filter(function(x){return x!==n;}); r.unshift(n);
+  });
+  try{ localStorage.setItem(NKEY,JSON.stringify(r.slice(0,16))); }catch(e){}
+}
+function formFrom(){
+  return {names:S.names.map(function(n,i){return n===DEFNAMES[i]?"":n;}),colors:S.colors.slice(),dealer:S.dealer};
+}
+// φόρμα παικτών (ρύθμιση και μενού): f={names,colors,dealer}, αλλάζει επί τόπου
+function playerForm(host,f){
+  var last=0,pick=null;
+  host.innerHTML='<div class="pcards">'+[0,1,2].map(function(i){
+    return '<div class="pcard" data-p="'+i+'"><div class="pc-row">'+
+      '<input class="pname" data-p="'+i+'" maxlength="12" placeholder="'+DEFNAMES[i]+'" value="'+esc(f.names[i])+'"'+
+      ' autocomplete="off" autocapitalize="characters" spellcheck="false" enterkeyhint="'+(i<2?"next":"done")+'"'+
+      ' aria-label="όνομα παίκτη '+(i+1)+'">'+
+      '<button class="deal" data-deal="'+i+'"></button></div>'+
+      '<div class="swatches">'+COLORS.map(function(c,ci){
+        return '<button class="sw" data-c="'+ci+'" style="background:'+c+'" aria-label="χρώμα '+(ci+1)+'"></button>';
+      }).join("")+'</div></div>';
+  }).join("")+'</div><div class="recent"></div>';
+  function paint(){
+    var used=f.names.map(normName);
+    [0,1,2].forEach(function(i){
+      var card=host.querySelector('.pcard[data-p="'+i+'"]'),d=card.querySelector(".deal"),on=f.dealer===i;
+      card.style.setProperty("--pc",COLORS[f.colors[i]]);
+      Array.prototype.forEach.call(card.querySelectorAll(".sw"),function(x){
+        x.setAttribute("aria-pressed",String(+x.dataset.c===f.colors[i]));});
+      d.setAttribute("aria-pressed",String(on)); d.textContent=on?"◆ ΜΟΙΡΑΖΕΙ":"◇";
+      d.setAttribute("aria-label",on?"μοιράζει":"να μοιράσει αυτός");
+      card.querySelector(".pname").classList.toggle("dup",!!used[i]&&
+        used.filter(function(x){return x===used[i];}).length>1);
+    });
+    var chips=recentNames().filter(function(n){return used.indexOf(n)<0;}).slice(0,12);
+    host.querySelector(".recent").innerHTML=chips.length?'<div class="rk">ΠΡΟΣΦΑΤΑ ΟΝΟΜΑΤΑ</div>'+
+      chips.map(function(n){return '<button class="chip" data-name="'+esc(n)+'">'+esc(n)+'</button>';}).join(""):"";
+  }
+  host.oninput=function(e){
+    var x=e.target.closest(".pname"); if(!x) return;
+    last=+x.dataset.p; f.names[last]=x.value; paint();
+  };
+  host.onkeydown=function(e){
+    var x=e.target.closest(".pname"); if(!x||e.key!=="Enter") return;
+    e.preventDefault(); var n=host.querySelector('.pname[data-p="'+(+x.dataset.p+1)+'"]');
+    if(n) n.focus(); else x.blur();
+  };
+  host.onclick=function(e){
+    var t=e.target,x;
+    if((x=t.closest(".pname"))){ last=pick=+x.dataset.p; return; }
+    if((x=t.closest(".sw"))){
+      var p=+x.closest(".pcard").dataset.p,c=+x.dataset.c,o=f.colors.indexOf(c);
+      if(o>-1&&o!==p) f.colors[o]=f.colors[p];          // πιασμένο χρώμα: ανταλλαγή
+      f.colors[p]=c; paint(); return;
+    }
+    if((x=t.closest("[data-deal]"))){ f.dealer=+x.dataset.deal; paint(); return; }
+    if((x=t.closest(".chip"))){
+      // στο πεδίο που άγγιξες, αλλιώς στο πρώτο άδειο, αλλιώς στο τελευταίο
+      var empty=[0,1,2].filter(function(i){return !normName(f.names[i]);})[0];
+      var tg=pick!==null?pick:empty!==undefined?empty:last;
+      f.names[tg]=x.dataset.name; host.querySelector('.pname[data-p="'+tg+'"]').value=f.names[tg];
+      pick=null; last=tg; paint();
+    }
+  };
+  paint();
+}
+
+/* ══ ρύθμιση ══ */
+var setupF=null;
+function showSetup(){
+  setupF=formFrom(); playerForm($("#setupPlayers"),setupF);
+  $("#startKasa").value=S.start;
+  $("#setupCancel").hidden=!S.started;
+  $("#setup").hidden=false; $("#app").hidden=true; window.scrollTo(0,0);
+}
 
 /* ══ πίστα ══ */
 function buildPista(){
@@ -391,6 +491,18 @@ function buildPista(){
     p.appendChild(b);
   });
 }
+// μακριά ονόματα: μικραίνει η γραμματοσειρά ώσπου να χωρέσουν στον τομέα
+function fitNames(){
+  Array.prototype.forEach.call(document.querySelectorAll(".cell .nm"),function(el){
+    el.style.fontSize="";
+    var w=el.getBoundingClientRect().width;
+    el.style.maxWidth="none"; var full=el.getBoundingClientRect().width; el.style.maxWidth="";
+    if(w&&full>w+0.1){ var fs=parseFloat(getComputedStyle(el).fontSize);
+      el.style.fontSize=Math.max(fs*0.6,fs*w/full*0.96)+"px"; }
+  });
+}
+if(window.ResizeObserver) new ResizeObserver(fitNames).observe($("#pista"));
+if(document.fonts&&document.fonts.ready) document.fonts.ready.then(fitNames);
 function netOf(i){var s=0;for(var j=0;j<3;j++) if(j!==i) s+=S.wist[i][j]-S.wist[j][i]; return s;}
 function render(){
   $("#dealerLbl").textContent="ΜΟΙΡΑΖΕΙ "+S.names[S.dealer];
@@ -400,7 +512,8 @@ function render(){
     el.querySelector(".nm").textContent=S.names[i];
     el.querySelector(".nm").style.color=col(i);
     k.textContent=S.kasa[i];
-    el.querySelector(".tag").textContent="ΚΑΣΑ";
+    el.querySelector(".tag").textContent=i===S.dealer?"◆ ΜΟΙΡΑΖΕΙ":"ΚΑΣΑ";
+    el.setAttribute("aria-label",S.names[i]+", κάσα "+S.kasa[i]+(i===S.dealer?", μοιράζει":""));
     el.classList.toggle("dealer",i===S.dealer);
     if(old&&old!==String(S.kasa[i])){el.classList.remove("bump");void el.offsetWidth;el.classList.add("bump");}
   });
@@ -419,6 +532,7 @@ function render(){
     el.classList.toggle("zero",net===0);
     if(old&&old!==String(Math.abs(net))){el.classList.remove("bump");void el.offsetWidth;el.classList.add("bump");}
   });
+  fitNames();
   if(S.kasa[0]===0&&S.kasa[1]===0&&S.kasa[2]===0){ if(!S._over){S._over=true;setTimeout(openSettle,600);} }
   else S._over=false;
 }
@@ -534,9 +648,9 @@ function prevPage(cur){
 }
 function openWiz(){
   D={dec:null,lv:null,st:null,play:null,chg:null,tr:[0,0,0],coin:Math.random()};
-  page="dec"; $("#wiz").classList.add("on"); drawWiz();
+  page="dec"; $("#wiz").classList.add("on"); pushModal(); drawWiz();
 }
-function closeWiz(){ blur(); $("#wiz").classList.remove("on"); }
+function closeWiz(){ blur(); $("#wiz").classList.remove("on"); popModal(); }
 function go(p){ page=p; drawWiz(); }
 
 function drawWiz(){
@@ -734,13 +848,23 @@ function kindLabel(k){
 function openSheet(html){
   flushClose();
   var s=$("#sheet"); s.replaceWith(s.cloneNode(false)); s=$("#sheet");
-  s.innerHTML=html; s.classList.add("on"); $("#backdrop").classList.add("on"); s.scrollTop=0; return s;
+  s.innerHTML=html; s.classList.add("on"); $("#backdrop").classList.add("on"); s.scrollTop=0; pushModal(); return s;
 }
 function blur(){ try{document.activeElement&&document.activeElement.blur();
   var sel=window.getSelection&&window.getSelection(); if(sel&&sel.removeAllRanges) sel.removeAllRanges();}catch(e){} }
-function closeSheet(){flushClose();blur();$("#sheet").classList.remove("on");$("#backdrop").classList.remove("on");}
+function closeSheet(){flushClose();blur();$("#sheet").classList.remove("on");$("#backdrop").classList.remove("on");popModal();}
+// κουμπί «πίσω» του κινητού: κλείνει φύλλο / πάει ένα βήμα πίσω στον οδηγό, αντί να βγαίνει από την εφαρμογή
+var modal=false;
+function pushModal(){ if(modal) return; modal=true; try{ history.pushState({prefa:1},""); }catch(e){} }
+function popModal(){ if(!modal) return; modal=false; try{ history.back(); }catch(e){} }
+window.addEventListener("popstate",function(){
+  if(!modal) return;
+  modal=false;
+  if($("#wiz").classList.contains("on")){ var p=prevPage(page); if(p){ go(p); pushModal(); } else closeWiz(); }
+  else closeSheet();
+});
 function editKasa(i){
-  snap();
+  var pre=snapStr();
   var s=openSheet('<div class="grip"></div><div class="kick">ΔΙΟΡΘΩΣΗ ΚΑΣΑΣ</div>'+
     '<h2 class="stitle" style="color:'+col(i)+'">'+esc(S.names[i])+'</h2>'+
     '<div class="trow"><div class="who"><i>κάσα</i></div><div class="stp">'+
@@ -748,21 +872,23 @@ function editKasa(i){
     '<input class="n" id="v" type="number" inputmode="numeric" min="0" value="'+S.kasa[i]+'">'+
     '<button data-d="1">+</button></div></div>'+
     '<p class="snote">Γράψε κατευθείαν τον αριθμό ή χρησιμοποίησε τα +/−. Κανονικά αλλάζει μόνη της στην καταχώρηση του γύρου.</p>'+
-    '<button class="done">ΕΤΟΙΜΟ</button>');
+    '<button class="done">ΕΤΟΙΜΟ</button>'+
+    '<button class="ghost" id="toplayers">Όνομα, χρώμα, ποιος μοιράζει</button>');
   var before=S.kasa[i];
-  onClose=function(){ if(S.kasa[i]!==before)
-    log("edit","Χειροκίνητη αλλαγή · κάσα "+S.names[i]+": "+before+" → "+S.kasa[i]); save(); };
+  onClose=function(){ if(S.kasa[i]!==before){ snap(pre);
+    log("edit","Χειροκίνητη αλλαγή · κάσα "+S.names[i]+": "+before+" → "+S.kasa[i]); } save(); };
   function set(v){ S.kasa[i]=Math.max(0,v||0); render(); save(); }
   s.addEventListener("click",function(e){
     var b=e.target.closest("[data-d]");
     if(b){ set(S.kasa[i]+ +b.dataset.d); $("#v").value=S.kasa[i]; }
     if(e.target.closest(".done")) closeSheet();
+    if(e.target.closest("#toplayers")) openPlayers();
   });
   $("#v").addEventListener("input",function(){ set(parseInt(this.value,10)); });
   $("#v").addEventListener("blur",function(){ this.value=S.kasa[i]; });
 }
 function editPair(k){
-  snap();
+  var pre=snapStr();
   var pr=PAIRS[k],a=pr.a,b2=pr.b;
   function net(){return S.wist[a][b2]-S.wist[b2][a];}
   function lbl(){var n=net(); return n===0?"πάτσι":"ο "+S.names[n>0?b2:a]+" χρωστάει "+Math.abs(n);}
@@ -777,9 +903,9 @@ function editPair(k){
     '<p class="snote">Αρνητικό νούμερο σημαίνει ότι χρωστάει ο '+esc(S.names[a])+'.</p>'+
     '<button class="done">ΕΤΟΙΜΟ</button>');
   var before=net();
-  onClose=function(){ if(net()!==before)
+  onClose=function(){ if(net()!==before){ snap(pre);
     log("edit","Χειροκίνητη αλλαγή · καπίκια "+S.names[a]+" — "+S.names[b2]+": "+
-      before+" → "+net()); save(); };
+      before+" → "+net()); } save(); };
   function set(n){
     n=n||0;
     S.wist[a][b2]=Math.max(0,n); S.wist[b2][a]=Math.max(0,-n);
@@ -792,6 +918,37 @@ function editPair(k){
   });
   $("#v").addEventListener("input",function(){ set(parseInt(this.value,10)); });
   $("#v").addEventListener("blur",function(){ this.value=net(); });
+}
+
+function openPlayers(){
+  var f=formFrom(),pre=snapStr(),old={names:S.names.slice(),colors:S.colors.slice(),dealer:S.dealer};
+  var s=openSheet('<div class="grip"></div><div class="kick">ΠΑΙΚΤΕΣ</div>'+
+    '<h2 class="stitle">Ονόματα &amp; χρώματα</h2>'+
+    '<p class="snote">Γράψε ή διάλεξε από τα πρόσφατα. Το ◆ δείχνει ποιος μοιράζει τώρα. Κάσες και καπίκια μένουν ως έχουν.</p>'+
+    '<div id="pform" style="margin-top:14px"></div>'+
+    '<button class="done">ΕΤΟΙΜΟ</button>');
+  playerForm($("#pform"),f);
+  onClose=function(){
+    var names=formNames(f);
+    if(hasDup(names)){ names=old.names; toast("Ίδιο όνομα σε δύο παίκτες — τα ονόματα δεν άλλαξαν"); }
+    var ch=[],colCh=f.colors.join()!==old.colors.join(),dCh=f.dealer!==old.dealer;
+    [0,1,2].forEach(function(i){ if(names[i]!==old.names[i]) ch.push(old.names[i]+" → "+names[i]); });
+    if(!ch.length&&!colCh&&!dCh) return;
+    snap(pre);
+    S.names=names; S.colors=f.colors.slice(); S.dealer=f.dealer;
+    rememberNames(names);
+    var parts=[];
+    if(ch.length) parts.push(ch.join(", "));
+    if(dCh) parts.push("μοιράζει "+names[f.dealer]);
+    if(colCh) parts.push("χρώματα");
+    log("edit","Αλλαγή παικτών · "+parts.join(" · "));
+    render(); save();
+  };
+  s.addEventListener("click",function(e){
+    if(!e.target.closest(".done")) return;
+    if(hasDup(formNames(f))){ toast("Δύο παίκτες έχουν το ίδιο όνομα"); return; }
+    closeSheet();
+  });
 }
 
 /* ══ λογαριασμός ══ */
@@ -836,32 +993,36 @@ document.addEventListener("keydown",function(e){
   if($("#wiz").classList.contains("on")) closeWiz(); else closeSheet();
 });
 $("#start").addEventListener("click",function(){
-  for(var i=0;i<3;i++){var v=$("#n"+i).value.trim(); if(v) S.names[i]=v.toUpperCase();}
-  S.start=Math.max(1,parseInt($("#startKasa").value,10)||30);
-  S.kasa=[S.start,S.start,S.start];S.started=true;
-  log("game","Νέο παιχνίδι · "+S.names.join(", ")+" · κάσα "+S.start+" έκαστος");
+  var names=formNames(setupF);
+  if(hasDup(names)){ toast("Δύο παίκτες έχουν το ίδιο όνομα"); return; }
+  if(S.started&&S.hand>1&&!confirm("Νέο παιχνίδι; Η τρέχουσα παρτίδα σβήνεται.")) return;
+  S.names=names; S.colors=setupF.colors.slice(); S.dealer=setupF.dealer;
+  S.start=Math.max(1,Math.min(999,parseInt($("#startKasa").value,10)||30));
+  S.kasa=[S.start,S.start,S.start]; S.wist=[[0,0,0],[0,0,0],[0,0,0]];
+  S.hand=1; S.log=[]; S.started=true; S._over=false;
+  hist=[]; $("#undo").disabled=true;
+  rememberNames(names);
+  log("game","Νέο παιχνίδι · "+S.names.join(", ")+" · κάσα "+S.start+" έκαστος · μοιράζει "+S.names[S.dealer]);
   $("#setup").hidden=true;$("#app").hidden=false;
-  buildPista();render();save();
+  buildPista();render();save();toast("Καθαρή πίστα");
 });
-function newGame(){
-  if(!confirm("Νέο παιχνίδι; Σβήνονται κάσες και καπίκια.")) return;
-  S.kasa=[S.start,S.start,S.start];S.wist=[[0,0,0],[0,0,0],[0,0,0]];
-  S.hand=1;S.dealer=0;S.log=[];hist=[];$("#undo").disabled=true;
-  log("game","Νέο παιχνίδι · κάσα "+S.start+" έκαστος");
-  render();save();closeSheet();toast("Καθαρή πίστα");
-}
+$("#setupCancel").addEventListener("click",function(){
+  $("#setup").hidden=true;$("#app").hidden=false;render();
+});
+function newGame(){ closeSheet(); showSetup(); }
 
 /* ══ μενού · αρχεία · ιστορικό ══ */
 function openMenu(){
   var s=openSheet('<div class="grip"></div><h2 class="stitle">Παιχνίδι</h2>'+
     '<div style="display:flex;flex-direction:column;gap:9px;margin-top:16px">'+
     (deferredPrompt?opt("Εγκατάσταση στην αρχική οθόνη","ανοίγει σαν κανονική εφαρμογή","",'data-a="install"'):"")+
+    opt("Παίκτες","ονόματα, χρώματα, ποιος μοιράζει","",'data-a="players"')+
     opt("Οθόνη πάντα αναμμένη",S.wake?"ενεργό — δεν κλειδώνει στο τραπέζι":"ανενεργό",
         '<span class="v">'+(S.wake?"ΝΑΙ":"ΟΧΙ")+'</span>','data-a="wake"')+
     opt("Ιστορικό","όλοι οι γύροι και οι διορθώσεις","",'data-a="log"')+
     opt("Αποθήκευση σε αρχείο","κατεβάζει την παρτίδα σε JSON","",'data-a="save"')+
     opt("Φόρτωση από αρχείο","συνεχίζεις μια ημιτελή παρτίδα","",'data-a="load"')+
-    opt("Νέο παιχνίδι","σβήνει κάσες και καπίκια","",'data-a="new"')+
+    opt("Νέο παιχνίδι","διαλέγεις παίκτες και κάσα από την αρχή","",'data-a="new"')+
     '</div><button class="done">ΚΛΕΙΣΙΜΟ</button>');
   s.addEventListener("click",function(e){
     var b=e.target.closest("[data-a]");
@@ -872,6 +1033,7 @@ function openMenu(){
     else if(a==="wake"){ S.wake=!S.wake; save(); applyWake(); openMenu();
       toast(S.wake?"Η οθόνη θα μένει αναμμένη":"Η οθόνη κλειδώνει κανονικά"); }
     else if(a==="log") openLog();
+    else if(a==="players") openPlayers();
     else if(a==="save") saveFile();
     else if(a==="load") $("#fileIn").click();
     else if(a==="new") newGame();
@@ -919,6 +1081,7 @@ $("#fileIn").addEventListener("change",function(){
       S.started=true;
       log("io","Φορτώθηκε παρτίδα από αρχείο: "+f.name+
         " · γύρος "+S.hand+" · κάσες "+S.kasa.join("/"));
+      rememberNames(S.names);
       $("#setup").hidden=true; $("#app").hidden=false;
       buildPista(); render(); save(); closeSheet(); toast("Η παρτίδα φορτώθηκε");
     }catch(err){ toast("Το αρχείο δεν διαβάστηκε"); }
@@ -932,7 +1095,8 @@ $("#round").addEventListener("click",openWiz);
 $("#settle").addEventListener("click",openSettle);
 $("#undo").addEventListener("click",function(){
   var p=hist.pop(); if(!p) return;
-  var o=JSON.parse(p);S.kasa=o.kasa;S.wist=o.wist;S.dealer=o.dealer;S.hand=o.hand;S.log=o.log;
+  var o=JSON.parse(p);
+  ["kasa","wist","dealer","hand","log","names","colors"].forEach(function(k){ if(o[k]!==undefined) S[k]=o[k]; });
   if(!hist.length) this.disabled=true;
   render();save();toast("Αναιρέθηκε");
 });
@@ -995,8 +1159,9 @@ load().then(function(sv){
   if(sv&&sv.started){
     Object.keys(sv).forEach(function(k){S[k]=sv[k];});
     normLog();
+    rememberNames(S.names);
     $("#setup").hidden=true;$("#app").hidden=false;buildPista();render();
-  }
+  }else showSetup();
   applyWake();
 });
 })();
